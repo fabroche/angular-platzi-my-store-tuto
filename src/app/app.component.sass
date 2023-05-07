@@ -1,0 +1,85 @@
+.box
+    height: 200px
+    width: 200px
+    overflow: auto
+    background: aliceblue
+    padding: 20px
+
+.description-text
+    height: 80px
+    overflow: auto
+    background: aliceblue
+    padding: 20px
+
+.card
+    transition: all 300ms
+    &:hover
+        translate: -1.0%
+        scale: 1.05
+        box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.2)
+
+.products--gid
+    // display: flex
+    // flex-direction: column
+    // flex: 1 1
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
+    gap: 15px
+    div
+        img
+            width: 100%
+            // height: 65%
+            border-radius: 10px
+        h2, p
+            margin: 0
+
+// @media screen and (min-width: 40em)
+//     .products--gid
+//         display: grid
+//         grid-template-columns: repeat(4,1fr)
+//         grid-gap: 15px
+
+// @media screen and (min-width: 60em)
+//     .products--gid
+//         display: grid
+//         grid-template-columns: repeat(5,1fr)
+//         grid-gap: 15px
+
+.message-error
+    color: aliceblue
+    background: red
+    font-weight: bold
+    padding: 5px
+    opacity: 0
+    width: 50px
+    height: 0
+    border-radius: 5px
+    display: flex
+    // margin-left: 5px
+    transition: all 200ms
+    &.invalid
+        width: 200px
+        height: 20px
+        opacity: 1
+
+.avatar-grid
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
+    transition: all 300ms
+
+.line-error
+    height: 0
+    border-bottom: 1px solid
+    &.invalid
+        border-color: red
+    &.valid
+        border-color: green
+
+.form-element
+    &.valid
+        border: 2px solid green
+        border-radius: 5px
+
+    &.invalid
+        border: 2px solid red
+        border-radius: 5px
