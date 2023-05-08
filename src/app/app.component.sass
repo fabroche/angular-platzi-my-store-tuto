@@ -1,3 +1,4 @@
+
 .box
     height: 200px
     width: 200px
@@ -5,17 +6,21 @@
     background: aliceblue
     padding: 20px
 
-.description-text
-    height: 80px
-    overflow: auto
-    background: aliceblue
-    padding: 20px
+.nav-bar
+    width: 100%
+    display: flex
+    background-color: darkslategrey
+    justify-content: center
+    align-items: center
+    color: aliceblue
+    font-weight: bold
+    box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.2)
 
 .card
     transition: all 300ms
     &:hover
-        translate: -1.0%
-        scale: 1.05
+        translate: -2.0%
+        // scale: 1.05
         box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.2)
 
 .products--gid
@@ -26,12 +31,12 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
     gap: 15px
     div
-        img
-            width: 100%
+    img
+        width: 100%
             // height: 65%
-            border-radius: 10px
-        h2, p
-            margin: 0
+        border-radius: 10px
+    h2, p
+        margin: 0
 
 // @media screen and (min-width: 40em)
 //     .products--gid
@@ -83,3 +88,224 @@
     &.invalid
         border: 2px solid red
         border-radius: 5px
+
+// store
+
+@keyframes cardEntrance
+    from
+        opacity: 0
+        transform: scale(0.3)
+
+    to
+        opacity: 1
+        transform: scale(1)
+
+@keyframes cardExit
+    from
+        opacity: 1
+        transform: scale(1)
+
+    to
+        opacity: 0
+        transform: scale(0.3)
+
+.store
+    list-style: none
+    display: flex
+    flex-wrap: wrap
+    flex: 1 1
+    justify-content: start
+    align-items: center
+    z-index: 1
+    transition: all 300ms
+
+.store-item
+    border: solid aliceblue 3px
+    margin: 10px
+    border-radius: 10px
+    padding: 20px
+    width: 230px
+    min-height: 350px
+    text-align: center
+    box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.2)
+    --stagger-delay: 100ms
+    animation: cardEntrance 300ms ease-in
+    animation-fill-mode: both
+    transition: all 300ms
+    &.inactive
+        animation: cardExit 300ms ease-out
+        animation-fill-mode: both
+
+.store-item-title
+    text-align: center
+    font-weight: bold
+    border: 2px aliceblue solid
+    border-radius: 5px
+    box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.2)
+    padding: 5px
+
+.store-item-img
+    object-fit: cover
+    border-radius: 8px
+    border: solid aliceblue 2px
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2)
+
+.store-item-description-text
+    height: 80px
+    overflow: auto
+    background: aliceblue
+    padding: 20px
+    border: 2px aliceblue solid
+    border-radius: 3px
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2)
+
+.store-item-price
+    color: green
+
+.store-buy-button
+    background-color: darkslategrey
+    border: solid 1px
+    border-radius: 3px
+    width: 200px
+    min-height: 30px
+    color: aliceblue
+    font-weight: bold
+    cursor: pointer
+    box-shadow: 2px 1px 1px 0px rgba(0, 0, 0, 0.2)
+
+// store form
+.store-add-form
+    transition: all 300ms
+
+.store-empty-notification
+    justify-content: center
+    align-items: center
+    margin: 20px
+    color: aliceblue
+    background: darkslategrey
+    font-weight: bold
+    padding: 5px
+
+    width: 50px
+    height: 0
+    border-radius: 5px
+    display: flex
+    // margin-left: 5px
+    transition: all 200ms
+    opacity: 0
+    &.active
+        width: 200px
+        height: 40px
+        opacity: 1
+
+.store-img-input
+    display: flex
+    flex-wrap: wrap
+    margin: 10px
+    max-width: 100%
+
+.store-img-label
+    font-weight: bold
+
+.store-item-price-input
+    margin-bottom: 10px
+
+.store-item-price-label
+    color: green
+
+.store-buy-notification-container
+    display: flex
+    justify-content: end
+    align-items: end
+    position: fixed
+    z-index: 2
+    right: 0
+    top: 50px
+
+@keyframes buyNotification
+    from
+        width: 200px
+        height: 40px
+        opacity: 1
+
+    to
+        width: 50px
+        height: 0
+        opacity: 0
+
+.store-buy-notification
+    justify-content: center
+    align-items: center
+    margin: 20px
+    color: aliceblue
+    background: darkslategrey
+    font-weight: bold
+    padding: 5px
+
+    width: 50px
+    height: 0
+    border-radius: 5px
+    display: flex
+    // margin-left: 5px
+    transition: all 200ms
+    opacity: 0
+    &.active
+        // position: absolute
+        width: 200px
+        height: 40px
+        opacity: 1
+    &.inactive
+        animation: buyNotification 300ms ease-in
+        animation-fill-mode: both
+
+footer
+    display: flex
+    flex: 1 1
+    flex-wrap: wrap
+    text-align: center
+    justify-content: start
+    align-items: center
+    background-color: darkslategrey
+
+    h2
+        color: aliceblue
+        margin-left: 10px
+
+    div
+        display: flex
+        flex: 1 1
+        // flex-wrap: wrap
+        justify-content: start
+        align-items: center
+        h2
+            margin: 0
+            padding: 15px
+            color: aliceblue
+            font-weight: bold
+    a
+        text-decoration: none
+        color: aliceblue
+        font-weight: bold
+
+.socialMedia-icon
+    margin: 0 5px 0 20px
+    max-width: 40px
+    max-height: 40px
+    border: 5px solid aliceblue
+    border-radius: 10px
+
+.twitter
+    border: 7px solid aliceblue
+
+.socialMedia-link
+    margin: 5px
+
+.conctact-section
+    display: flex
+    flex-wrap: wrap
+    flex: 1 1
+    padding: 5px
+
+.aboutUs-section
+    color: aliceblue
+    font-weight: bold
