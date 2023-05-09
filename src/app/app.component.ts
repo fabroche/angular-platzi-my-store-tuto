@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { timeout } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { timeout, window } from 'rxjs';
 import { IProduct } from './product.model';
 import { EnumRegister } from './product.model';
 import { IRegister } from './product.model';
@@ -12,10 +12,9 @@ import { uploadFile, downloadFileUrl } from 'src/firebase/config';
 })
 export class AppComponent {
   // Common States
-
+  scrollState = 0;
   // Products
   // Products List
-
   products: IProduct[] = [
     {
       name: 'EL mejor juguete',
@@ -50,6 +49,10 @@ export class AppComponent {
     },
   ];
 
+  productsLocalStorage: IProduct[] = JSON.parse(
+    localStorage.getItem('products') || ''
+  );
+
   // Product States
   // Register Form
   newProductRegister: IProduct = {
@@ -65,6 +68,7 @@ export class AppComponent {
 
   // Store
   //Store States
+  storeMinHeight = this.onResizeHandle();
   staggerDelay = 100;
   showbuyNotification = false;
   facebookIcon = '../assets/facebook.png';
@@ -75,20 +79,28 @@ export class AppComponent {
 
   // General
   onScroll(event: Event) {
-    const element = event.target as HTMLElement;
-    console.log('scroll :>> ', element.scrollTop);
+    if (event) {
+      const element = event.target as HTMLUListElement;
+      console.log('scroll :>> ', element);
+    }
+    this.scrollState = scrollY;
+    console.log(this.scrollState);
   }
 
   ngOnInit() {
     // Scroll to top of page after loading
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
+    // localStorage.setItem('products', this.productsLocalStorage);
+    this.productsLocalStorage.push(...this.products);
+    console.log('products :>> ', this.productsLocalStorage);
+    this.onResizeHandle();
   }
 
   // Product
 
   buyProduct(index: number) {
-    const selled_product = this.products[index];
     this.selledProductAnimation(index);
+    console.log('scroll :>> ', scrollY);
     setTimeout(() => this.buyAnimation(), 2000);
   }
 
@@ -98,7 +110,11 @@ export class AppComponent {
       selledProduct.className = selledProduct.className + ' inactive';
     }
     setTimeout(() => {
-      this.products.splice(index, 1);
+      this.productsLocalStorage.splice(index, 1);
+      localStorage.setItem(
+        'products',
+        JSON.stringify(this.productsLocalStorage)
+      );
       this.showbuyNotification = true;
     }, 500);
   }
@@ -125,6 +141,7 @@ export class AppComponent {
 
   async onAddProduct() {
     if (this.toUploadFile) {
+      console.log('newProductRegister :>> ', this.newProductRegister);
       // 1 - subir el fichero
       await uploadFile(this.toUploadFile);
       // 2 - obtener la ruta de la imagen
@@ -134,6 +151,7 @@ export class AppComponent {
       this.newProductRegister.name = this.productName;
       this.newProductRegister.price = this.productPrice;
       this.storeFormImg = '../assets/add4.jpg';
+      this.toUploadFile = null;
       // 4 - vaciar Form
       const formElement = document.getElementById(
         'store-form-products'
@@ -141,7 +159,16 @@ export class AppComponent {
       formElement.reset();
     }
     // 5 - agregar el nuevo producto a la lista
-    this.products.push(this.newProductRegister);
+    //para local storage
+    this.productsLocalStorage.push(this.newProductRegister);
+    // 6 - vaciar register para evitar mutacion
+    this.newProductRegister = {
+      name: '',
+      image: '',
+      price: 0,
+    };
+    localStorage.setItem('products', JSON.stringify(this.productsLocalStorage));
+    console.log('this.productsLocalStorage :>> ', this.productsLocalStorage);
   }
 
   // Store
@@ -170,6 +197,21 @@ export class AppComponent {
 
     return delay;
   }
+  onResizeHandle(event?: Event) {
+    const lastElement = document.querySelector('#footer');
+    const firstElement = document.querySelector('#navbar');
+    if (firstElement && lastElement) {
+      const firstElementHeight = lastElement.getBoundingClientRect().height;
+      const lastElementHeight = lastElement.getBoundingClientRect().height;
+      const storeMinHeight =
+        innerHeight - (Math.round(firstElementHeight / 2) + lastElementHeight);
+      console.log('resizing');
+      this.storeMinHeight = storeMinHeight;
+      return storeMinHeight;
+    }
+    this.storeMinHeight = innerHeight;
+    return innerHeight;
+  }
 
   // Dynamic Forms
   getObjectLabelList(object: IRegister): string[] {
@@ -192,7 +234,6 @@ export class AppComponent {
         myTypes[index] = 'number';
       }
     }
-
     console.log('myTypes :>> ', myTypes);
     return myTypes;
   }

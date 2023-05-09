@@ -25,5 +25,4 @@ export async function downloadFileUrl(file: File) {
     const storageRef = ref(storage, `/assets/products-img/${file.name}`);
     const response = await getDownloadURL(storageRef);
     return response;
-
 }

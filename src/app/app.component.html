@@ -1,98 +1,61 @@
-<nav>
-  <div class="nav-bar">
-    <h1>My Yarn Store</h1>
-  </div>
-</nav>
-<div class="store-buy-notification-container">
-  <li
-    *ngIf="showbuyNotification"
-    class="store-buy-notification"
-    [ngClass]="{
-    'active': buyAnimationStatus() === true,
+<!-- <div class="store-container"> -->
+  <nav
+    id="navbar"
+    [ngStyle]="{
+    'position': this.scrollState > 0 ? 'fixed' : '',
+    'z-index': this.scrollState > 0 ? 2 : 2,
+    'width.%': this.scrollState > 0 ? 100 : 100,
+    'top': this.scrollState > 0 ? 0 : 0,
+    'left': this.scrollState > 0 ? 0 : 0,
   }"
   >
-    <p>🎁 Gracias por Elegirnos</p>
-  </li>
-</div>
-<ul
-  class="store"
-  [style.justify-content]="products.length === 0 ? 'center' : 'start'"
->
-  <li
-    *ngIf="products.length === 0"
-    class="store-empty-notification"
-    [class.active]="products.length === 0"
-  >
-    <p>Products out of stock</p>
-  </li>
-  <li
-    class="card store-item"
-    *ngFor="let product of products; index as i"
-    [style.animation-delay.ms]="animationStoreItemsDelay(staggerDelay, i)"
-    [id]="i"
-  >
-    <span class="store-item-title">
-      {{ product.name }}
-    </span>
-    <div>
-      <img
-        class="store-item-img"
-        width="200"
-        height="150"
-        [src]="product.image"
-      />
-      <p class="store-item-description-text">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora
-        placeat saepe nihil, porro ea minima! Corrupti, quaerat ipsum tempore
-        impedit eligendi expedita asperiores aspernatur amet sit natus et.
-        Dicta, facilis!
-      </p>
-      <p class="store-item-price">${{ product.price }}</p>
+    <div class="nav-bar">
+      <h1>My Yarn Store</h1>
     </div>
-    <button (click)="buyProduct(i)" class="store-buy-button">Buy</button>
-  </li>
-
-  <li
-    class="card store-item"
-    [style.animation-delay.ms]="
-      animationStoreItemsFormDelay(staggerDelay, products)
-    "
-  >
-    <form
-      id="store-form-products"
-      class="store-add-form"
-      (ngSubmit)="onAddProduct()"
-      #storeForm="ngForm"
+  </nav>
+  <div class="store-buy-notification-container">
+    <li
+      *ngIf="showbuyNotification"
+      class="store-buy-notification"
+      [ngClass]="{
+    'active': buyAnimationStatus() === true,
+  }"
     >
-      <input
-        id="name"
-        name="name"
-        #newProductName="ngModel"
-        [(ngModel)]="productName"
-        required
-        type="text"
-        class="store-item-title"
-        placeholder="set a name"
-      />
+      <p>🎁 Gracias por Elegirnos</p>
+    </li>
+  </div>
+  <ul
+    class="store"
+    [ngStyle]="{
+      'justify-content':
+        productsLocalStorage.length === 0 ? 'center' : 'flex-start',
+      'min-height.px': storeMinHeight
+    }"
+    (resize)="onResizeHandle($event)"
+  >
+    <!-- [style.justify-content]="products.length === 0 ? 'center' : 'start'" -->
+    <li
+      *ngIf="productsLocalStorage.length === 0"
+      class="store-empty-notification"
+      [class.active]="productsLocalStorage.length === 0"
+    >
+      <p>Products out of stock</p>
+    </li>
+    <li
+      class="card store-item"
+      *ngFor="let product of productsLocalStorage; index as i"
+      [style.animation-delay.ms]="animationStoreItemsDelay(staggerDelay, i)"
+      [id]="i"
+    >
+      <span class="store-item-title">
+        {{ product.name }}
+      </span>
       <div>
         <img
           class="store-item-img"
           width="200"
           height="150"
-          [src]="storeFormImg"
-        />
-        <label class="store-img-label" for="image">Upload an image</label>
-        <input
-          required
-          id="image"
-          name="image"
-          #newProductName="ngModel"
-          [(ngModel)]="imageUrl"
-          class="store-img-input"
-          required
-          type="file"
-          (change)="onFileSelected($event)"
-          accept="image/png, image/jpeg"
+          [src]="product.image"
         />
         <p class="store-item-description-text">
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora
@@ -100,60 +63,118 @@
           impedit eligendi expedita asperiores aspernatur amet sit natus et.
           Dicta, facilis!
         </p>
-        <label class="store-item-price-label" for="price">Price: </label>
-        <input
-          required
-          id="price"
-          name="price"
-          #newProductName="ngModel"
-          [(ngModel)]="productPrice"
-          type="number"
-          class="store-item-price-input"
-          placeholder="set a price"
-        />
+        <p class="store-item-price">${{ product.price }}</p>
       </div>
-      <button
-        [disabled]="storeForm.invalid"
-        [style.background-color]="storeForm.valid ? 'darkslategrey' : 'gray'"
-        type="submit"
-        class="store-buy-button"
+      <button (click)="buyProduct(i)" class="store-buy-button">Buy</button>
+    </li>
+
+    <li
+      class="card store-item"
+      [style.animation-delay.ms]="
+        animationStoreItemsFormDelay(staggerDelay, productsLocalStorage)
+      "
+      (change)="onResizeHandle()"
+    >
+      <form
+        id="store-form-products"
+        class="store-add-form"
+        (ngSubmit)="onAddProduct()"
+        #storeForm="ngForm"
       >
-        Add New Product
-      </button>
-    </form>
-  </li>
-</ul>
-<footer>
-  <h2>Contact Us</h2>
-  <div class="conctact-section">
-    <div class="socialMedia-link">
-      <img class="socialMedia-icon" [src]="facebookIcon" />
-      <a
-        target="_blank"
-        href="https://www.facebook.com/profile.php?id=100010586684410"
-        >On Facebook</a
-      >
+        <input
+          id="name"
+          name="name"
+          #newProductName="ngModel"
+          [(ngModel)]="productName"
+          required
+          type="text"
+          class="store-item-title"
+          placeholder="set a name"
+        />
+        <div>
+          <img
+            class="store-item-img"
+            width="200"
+            height="150"
+            [src]="storeFormImg"
+          />
+          <label class="store-img-label" for="image">Upload an image</label>
+          <input
+            required
+            id="image"
+            name="image"
+            #newProductName="ngModel"
+            [(ngModel)]="imageUrl"
+            class="store-img-input"
+            required
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/png, image/jpeg"
+          />
+          <p class="store-item-description-text">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora
+            placeat saepe nihil, porro ea minima! Corrupti, quaerat ipsum
+            tempore impedit eligendi expedita asperiores aspernatur amet sit
+            natus et. Dicta, facilis!
+          </p>
+          <label class="store-item-price-label" for="price">Price: </label>
+          <input
+            required
+            id="price"
+            name="price"
+            #newProductName="ngModel"
+            [(ngModel)]="productPrice"
+            type="number"
+            class="store-item-price-input"
+            placeholder="set a price"
+          />
+        </div>
+        <button
+          [disabled]="storeForm.invalid"
+          [style.background-color]="storeForm.valid ? 'darkslategrey' : 'gray'"
+          type="submit"
+          class="store-buy-button"
+        >
+          Add New Product
+        </button>
+      </form>
+    </li>
+  </ul>
+  <footer
+  id="footer"
+  >
+    <h2>Contact Us</h2>
+    <div class="conctact-section">
+      <div class="socialMedia-link">
+        <img class="socialMedia-icon" [src]="facebookIcon" />
+        <a
+          target="_blank"
+          href="https://www.facebook.com/profile.php?id=100010586684410"
+          >On Facebook</a
+        >
+      </div>
+
+      <div class="socialMedia-link">
+        <img class="socialMedia-icon" [src]="instagramIcon" />
+        <a target="_blank" href="https://www.instagram.com/_frankobro_/"
+          >On Instagram</a
+        >
+      </div>
+
+      <div class="socialMedia-link">
+        <img class="socialMedia-icon twitter" [src]="twitterIcon" />
+        <a target="_blank" href="https://twitter.com/fabroche98">On Twitter</a>
+      </div>
     </div>
 
-    <div class="socialMedia-link">
-      <img class="socialMedia-icon" [src]="instagramIcon" />
-      <a target="_blank" href="https://www.instagram.com/_frankobro_/"
-        >On Instagram</a
-      >
+    <div class="aboutUs-section">
+      <h2>About Us</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, odio animi
+        ipsa saepe accusantium, aliquam dicta illo molestias enim dolorem porro
+        nesciunt officia cumque rerum sed deleniti recusandae inventore
+        assumenda.
+      </p>
     </div>
-
-    <div class="socialMedia-link">
-      <img class="socialMedia-icon twitter" [src]="twitterIcon" />
-      <a target="_blank" href="https://twitter.com/fabroche98">On Twitter</a>
-    </div>
-  </div>
-
-  <div class="aboutUs-section">
-    <h2>About Us</h2>
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, odio animi
-      ipsa saepe accusantium, aliquam dicta illo molestias enim dolorem porro
-      nesciunt officia cumque rerum sed deleniti recusandae inventore assumenda.
-    </p>
-  </div>
-</footer>
+  </footer>
+<!-- </div> -->
