@@ -1,0 +1,225 @@
+<!-- <hr />
+<h1>Formulario</h1>
+
+<form (ngSubmit)="onRegister()" #myForm="ngForm">
+  <div class="input-group">
+    <label for="name" class="form-element">Name: </label>
+    <input
+      class="form-element"
+      #formName="ngModel"
+      required
+      name="name"
+      type="text"
+      id="name"
+      [ngClass]="{
+        'valid': formName.valid,
+        'invalid': formName.invalid,
+      }"
+      [(ngModel)]="register.name"
+    />
+    <p>Mensajes de error</p>
+  </div>
+  <div class="input-group">
+    <label for="email" class="form-element">Email: </label>
+    <input
+      class="form-element"
+      #formEmail="ngModel"
+      required
+      name="email"
+      type="email"
+      id="email"
+      [ngClass]="{
+        'valid': formEmail.valid,
+        'invalid': formEmail.invalid,
+      }"
+      [(ngModel)]="register.email"
+    />
+    <p>Mensajes de error</p>
+  </div>
+  <div class="input-group">
+    <label for="password" class="form-element">Password: </label>
+    <input
+      class="form-element"
+      #formPassword="ngModel"
+      required
+      name="password"
+      type="password"
+      id="password"
+      [ngClass]="{
+        'valid': formPassword.valid,
+        'invalid': formPassword.invalid,
+      }"
+      [(ngModel)]="register.password"
+    />
+    <p>Mensajes de error</p>
+  </div>
+  <button [disabled]="myForm.invalid" type="submit">Registrar</button>
+  <button type="button">Action</button>
+</form>
+
+<hr />
+<h1>NgClass & NgStyle</h1>
+
+<div class="avatar-grid">
+  <div>
+    <input type="number" [(ngModel)]="box.width" />
+    <input type="number" [(ngModel)]="box.height" />
+    <input type="color" [(ngModel)]="box.background" />
+  </div>
+  <div>
+    <div
+      [ngStyle]="{
+        'width.px': box.width,
+        'height.px': box.height,
+        'background-color': box.background,
+        display: 'block'
+      }"
+    ></div>
+  </div>
+</div>
+
+<input
+  type="text"
+  required
+  #myNameInput10="ngModel"
+  [(ngModel)]="person.name"
+/>
+<hr
+  class="line-error"
+  [ngClass]="{
+  'valid': myNameInput10.valid,
+  'invalid': myNameInput10.invalid,
+ }"
+/>
+<p class="message-error" [class.invalid]="myNameInput10.invalid">
+  El campo es requerido
+</p>
+
+<hr />
+<h1>Class & Style</h1>
+<label>Nombre</label>
+<input type="text" required #myNameInput3="ngModel" [(ngModel)]="person.name" />
+<p [style.font-style]="myNameInput3.invalid ? 'italic' : 'normal'">
+  Texto Texto Texto
+</p>
+
+<div class="avatar-grid">
+  <div>
+    <input type="text" #myNameInput4="ngModel" [(ngModel)]="widthImg" />
+  </div>
+  <div>
+    <img
+      [style.width.px]="widthImg"
+      [src]="person.avatar"
+      alt="Es una imagen"
+    />
+  </div>
+</div>
+
+<input type="text" required #myNameInput="ngModel" [(ngModel)]="person.name" />
+<p class="message-error" [class.invalid]="myNameInput.invalid">
+  El campo es requerido
+</p>
+
+<hr />
+<h1>Estilos</h1>
+<div class="products--gid">
+  <div *ngFor="let myProduct of products">
+    <img [src]="myProduct.image" alt="Imagen del Producto" />
+    <h2>{{ myProduct.price }}</h2>
+    <p>{{ myProduct.name }}</p>
+  </div>
+</div>
+
+<hr />
+<h1>[ngSwitch]</h1>
+<input type="text" required #switchInput="ngModel" [(ngModel)]="person.name" />
+<div [ngSwitch]="person.name">
+  <p *ngSwitchCase="'Frank'">Soy Frank</p>
+  <p *ngSwitchCase="'Nico'">Soy Nico</p>
+  <p *ngSwitchCase="'Valentina'">Soy Valentina</p>
+  <p *ngSwitchCase="''">Campo Vacio</p>
+  <p *ngSwitchDefault>No se quien es {{ switchInput.value }}</p>
+</div>
+
+<hr />
+<h1>*ngFor para Arrays</h1>
+<input type="text" required #nameInput4="ngModel" [(ngModel)]="newName" />
+<button (click)="addName()" [disabled]="!nameInput4.valid">Add Product</button>
+
+<hr />
+<h1>*ngFor</h1>
+<input type="text" required #nameInput3="ngModel" [(ngModel)]="newName" />
+<button (click)="addName()" [disabled]="!nameInput3.valid">Add name</button>
+<ul>
+  <li *ngIf="names.length === 0">The names list its empty already</li>
+  <li *ngFor="let name of names; index as i">
+    {{ i }} {{ name }}
+    <button (click)="deleteName(i)">Delete</button>
+  </li>
+</ul>
+
+<hr />
+<h1>*ngIf</h1>
+<input type="text" required [(ngModel)]="person.name" />
+<p *ngIf="person.name === 'Frank'">Soy Frank</p>
+<p *ngIf="person.name === 'Nico' && person.age === 18; else elseBlock">
+  Soy Nico
+</p>
+<ng-template #elseBlock>
+  <p>Bloque de else</p>
+</ng-template>
+
+<hr />
+<h1>NgModel</h1>
+
+<p>Nombre: {{ person.name }}</p>
+<input type="text" required #nameInput="ngModel" [(ngModel)]="person.name" />
+<p [style]="nameInput.valid ? 'color: green' : 'color: red'">
+  {{ nameInput.valid ? "Valid" : "Invalid" }}
+</p>
+
+<p>Age: {{ person.age }}</p>
+<input
+  type="number"
+  min="18"
+  max="200"
+  required
+  #ageInput="ngModel"
+  [(ngModel)]="person.age"
+/>
+<p [style]="ageInput.valid ? 'color: green' : 'color: red'">
+  {{ ageInput.valid ? "Valid" : "Invalid" }}
+</p>
+
+<hr />
+<h1>Eventos</h1>
+<button [disabled]="btnDisabled">Enviar</button>
+<button (click)="toggleButton()">Toggle Button</button>
+<p>Edad {{ person.age }}</p>
+<button (click)="increaseAge()">Age ++</button>
+
+<div class="box" (scroll)="onScroll($event)">
+  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus officia
+  velit necessitatibus tempora itaque impedit? Ducimus id delectus at eveniet
+  harum. Inventore ullam eum dolor animi! Maiores reprehenderit impedit
+  architecto! Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero
+  maiores at, impedit hic cupiditate tempore eum veritatis eaque expedita
+  corporis et vitae quia labore ipsum dolore, ullam ducimus a modi.
+</div>
+<input type="text" [value]="person.name" (keyup)="changeName($event)" />
+<hr />
+<h1>Propiedades</h1>
+<button [disabled]="btnDisabled">Enviar</button>
+<input type="text" [value]="person.name" />
+<progress max="100" [value]="person.age"></progress>
+<img width="100" [src]="person.avatar" />
+<hr />
+<div>
+  <h1>Hola Mundo</h1>
+  <hr />
+  <h3>Hola, soy {{ person.name }} y tengo {{ person.age }}</h3>
+</div>
+<div style="{{ styles_absoluteCenter }}">
+  <img src="{{ img }}" alt="Es una imagen" style="width: 100%" />
+</div> -->

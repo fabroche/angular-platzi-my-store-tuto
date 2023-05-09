@@ -3,6 +3,7 @@ import { timeout } from 'rxjs';
 import { IProduct } from './product.model';
 import { EnumRegister } from './product.model';
 import { IRegister } from './product.model';
+import { uploadFile, downloadFileUrl } from 'src/firebase/config';
 
 @Component({
   selector: 'app-root',
@@ -10,32 +11,10 @@ import { IRegister } from './product.model';
   styleUrls: ['./app.component.sass'],
 })
 export class AppComponent {
-  widthImg = 10;
-  title = 'my-store1';
-  name = 'Frank';
-  age = 24;
-  img = 'https://images6.alphacoders.com/106/thumb-1920-1065654.png';
-  styles_absoluteCenter =
-    'display: flex; justify-content: center; align-items: center;';
-  btnDisabled = true;
-  register: IRegister = {
-    name: '',
-    email: '',
-    password: '',
-  };
-  person = {
-    name: 'Frank',
-    age: 24,
-    avatar: 'https://images6.alphacoders.com/106/thumb-1920-1065654.png',
-  };
+  // Common States
 
-  names: string[] = ['Nico', 'Juli', 'Santi'];
-  newName = '';
-  box = {
-    width: 100,
-    height: 100,
-    background: 'red',
-  };
+  // Products
+  // Products List
 
   products: IProduct[] = [
     {
@@ -71,41 +50,42 @@ export class AppComponent {
     },
   ];
 
+  // Product States
+  // Register Form
   newProductRegister: IProduct = {
     name: '',
     price: 0,
     image: '',
   };
-
   storeFormImg = '../assets/add4.jpg';
+  toUploadFile: File | null = null;
+  imageUrl: string | null = null;
+  productName = '';
+  productPrice = 0;
+
+  // Store
+  //Store States
   staggerDelay = 100;
   showbuyNotification = false;
   facebookIcon = '../assets/facebook.png';
   instagramIcon = '../assets/insta.png';
   twitterIcon = '../assets/twitter.png';
 
-  toggleButton() {
-    this.btnDisabled = !this.btnDisabled;
-  }
-  increaseAge() {
-    this.person.age += 1;
-  }
+  // Services
+
+  // General
   onScroll(event: Event) {
     const element = event.target as HTMLElement;
     console.log('scroll :>> ', element.scrollTop);
   }
 
-  changeName(event: Event) {
-    const element = event.target as HTMLInputElement;
-    this.person.name = element.value;
+  ngOnInit() {
+    // Scroll to top of page after loading
+    window.scrollTo(0, 0);
   }
-  addName() {
-    this.names.push(this.newName);
-    this.newName = '';
-  }
-  deleteName(index: number) {
-    this.names.splice(index, 1);
-  }
+
+  // Product
+
   buyProduct(index: number) {
     const selled_product = this.products[index];
     this.selledProductAnimation(index);
@@ -142,6 +122,56 @@ export class AppComponent {
   buyAnimationStatus() {
     return this.showbuyNotification;
   }
+
+  async onAddProduct() {
+    if (this.toUploadFile) {
+      // 1 - subir el fichero
+      await uploadFile(this.toUploadFile);
+      // 2 - obtener la ruta de la imagen
+      this.imageUrl = await downloadFileUrl(this.toUploadFile);
+      // 3 - construir nuevo Producto
+      this.newProductRegister.image = this.imageUrl;
+      this.newProductRegister.name = this.productName;
+      this.newProductRegister.price = this.productPrice;
+      this.storeFormImg = '../assets/add4.jpg';
+      // 4 - vaciar Form
+      const formElement = document.getElementById(
+        'store-form-products'
+      ) as HTMLFormElement;
+      formElement.reset();
+    }
+    // 5 - agregar el nuevo producto a la lista
+    this.products.push(this.newProductRegister);
+  }
+
+  // Store
+
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement; // Convertir event.target a HTMLInputElement
+
+    // Verificar si el objeto no es null y si posee archivos seleccionados
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      // Obtener el archivo seleccionado
+      const file = fileInput.files[0];
+      // Crear la URL del objeto URL con el archivo seleccionado
+      const imgUrl = URL.createObjectURL(file);
+      this.storeFormImg = imgUrl;
+      // Salvar Estado del archivo a subir
+      this.toUploadFile = file;
+    }
+  }
+
+  animationStoreItemsDelay(staggerDelay: number, index: number) {
+    const delay = (index + 1) * staggerDelay;
+    return delay;
+  }
+  animationStoreItemsFormDelay(staggerDelay: number, products: IProduct[]) {
+    const delay = (products.length + 1) * staggerDelay;
+
+    return delay;
+  }
+
+  // Dynamic Forms
   getObjectLabelList(object: IRegister): string[] {
     return Object.keys(object);
   }
@@ -165,38 +195,5 @@ export class AppComponent {
 
     console.log('myTypes :>> ', myTypes);
     return myTypes;
-  }
-  onRegister() {
-    console.log('register :>> ', this.register);
-  }
-  onAddProduct() {
-    console.log(URL.revokeObjectURL(this.newProductRegister.image));
-    console.log('this.newProductRegister :>> ', this.newProductRegister);
-    this.products.push(this.newProductRegister);
-    // console.log('this.storeFormImg :>> ', this.storeFormImg);
-  }
-  onFileSelected(event: Event) {
-    const fileInput = event.target as HTMLInputElement; // Convertir event.target a HTMLInputElement
-
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
-      // Verificar si el objeto no es null y si posee archivos seleccionados
-      const file = fileInput.files[0]; // Obtener el archivo seleccionado
-      const imgUrl = URL.createObjectURL(file);
-      // Crear la URL del objeto URL con el archivo seleccionado
-      this.storeFormImg = imgUrl;
-    }
-  }
-  animationStoreItemsDelay(staggerDelay: number, index: number) {
-    const delay = (index + 1) * staggerDelay;
-    return delay;
-  }
-  animationStoreItemsFormDelay(staggerDelay: number, products: IProduct[]) {
-    const delay = (products.length + 1) * staggerDelay;
-
-    return delay;
-  }
-  ngOnInit() {
-    // Scroll to top of page after loading
-    window.scrollTo(0, 0);
   }
 }
