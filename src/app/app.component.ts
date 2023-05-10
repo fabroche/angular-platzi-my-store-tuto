@@ -4,6 +4,7 @@ import { IProduct } from './product.model';
 import { EnumRegister } from './product.model';
 import { IRegister } from './product.model';
 import { uploadFile, downloadFileUrl } from 'src/firebase/config';
+import { faker } from '@faker-js/faker';
 
 @Component({
   selector: 'app-root',
@@ -13,45 +14,89 @@ import { uploadFile, downloadFileUrl } from 'src/firebase/config';
 export class AppComponent {
   // Common States
   scrollState = 0;
+  aboutUs = faker.commerce.productDescription();
+
   // Products
   // Products List
+  priceStartRange = 101;
+  priceEndRange = 152;
+
   products: IProduct[] = [
     {
-      name: 'EL mejor juguete',
-      price: 565,
-      image: '../assets/toy.jpg',
+      name: faker.name.firstName(),
+      price: Number(
+        faker.commerce.price(this.priceStartRange, this.priceEndRange)
+      ),
+      image: '../assets/Doggys/doggy1.jpeg',
       category: 'all',
-    },
-    {
-      name: 'Bicicleta casi nueva',
-      price: 356,
-      image: '../assets/bike.jpg',
-    },
-    {
-      name: 'Colleción de albumnes',
-      price: 34,
-      image: '../assets/album.jpg',
-    },
-    {
-      name: 'Mis libros',
-      price: 23,
-      image: '../assets/books.jpg',
-    },
-    {
-      name: 'Casa para perro',
-      price: 34,
-      image: '../assets/house.jpg',
+      description: faker.commerce.productDescription(),
     },
     {
       name: 'Gafas',
-      price: 3434,
-      image: '../assets/glasses.jpg',
+      price: Number(
+        faker.commerce.price(this.priceStartRange, this.priceEndRange)
+      ),
+      image: '../assets/Doggys/doggy7.jpg',
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.name.firstName(),
+      price: Number(
+        faker.commerce.price(this.priceStartRange, this.priceEndRange)
+      ),
+      image: '../assets/Doggys/doggy8.jpg',
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.name.firstName(),
+      price: Number(
+        faker.commerce.price(this.priceStartRange, this.priceEndRange)
+      ),
+      image: '../assets/Doggys/doggy9.jpg',
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.name.firstName(),
+      price: Number(
+        faker.commerce.price(this.priceStartRange, this.priceEndRange)
+      ),
+      image: '../assets/Doggys/doggy5.avif',
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.name.firstName(),
+      price: Number(
+        faker.commerce.price(this.priceStartRange, this.priceEndRange)
+      ),
+      image: '../assets/Doggys/doggy3.jpeg',
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: faker.name.firstName(),
+      price: Number(
+        faker.commerce.price(this.priceStartRange, this.priceEndRange)
+      ),
+      image: '../assets/Doggys/doggy6.jpeg',
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: `the ${faker.name.firstName()}s`,
+      price: Number(
+        faker.commerce.price(this.priceStartRange, this.priceEndRange)
+      ),
+      image: '../assets/Doggys/doggy4.jpeg',
+      description: faker.commerce.productDescription(),
+    },
+    {
+      name: 'Casa para perro',
+      price: 50,
+      image: '../assets/house.jpg',
+      description: faker.commerce.productDescription(),
     },
   ];
 
-  productsLocalStorage: IProduct[] = JSON.parse(
-    localStorage.getItem('products') || ''
-  );
+  productsLocalStorage: IProduct[] =
+    JSON.parse(localStorage.getItem('products')!) || [];
 
   // Product States
   // Register Form
@@ -59,12 +104,14 @@ export class AppComponent {
     name: '',
     price: 0,
     image: '',
+    description: '',
   };
   storeFormImg = '../assets/add4.jpg';
   toUploadFile: File | null = null;
   imageUrl: string | null = null;
   productName = '';
   productPrice = 0;
+  productDescription = '';
 
   // Store
   //Store States
@@ -93,9 +140,12 @@ export class AppComponent {
     // localStorage.setItem('products', this.productsLocalStorage);
     this.productsLocalStorage.push(...this.products);
     console.log('products :>> ', this.productsLocalStorage);
-    this.onResizeHandle();
+    this.storeMinHeight = this.onResizeHandle();
   }
 
+  // ngOnChange() {
+  //   this.onResizeHandle();
+  // }
   // Product
 
   buyProduct(index: number) {
@@ -150,6 +200,7 @@ export class AppComponent {
       this.newProductRegister.image = this.imageUrl;
       this.newProductRegister.name = this.productName;
       this.newProductRegister.price = this.productPrice;
+      this.newProductRegister.description = this.productDescription;
       this.storeFormImg = '../assets/add4.jpg';
       this.toUploadFile = null;
       // 4 - vaciar Form
@@ -166,6 +217,7 @@ export class AppComponent {
       name: '',
       image: '',
       price: 0,
+      description: '',
     };
     localStorage.setItem('products', JSON.stringify(this.productsLocalStorage));
     console.log('this.productsLocalStorage :>> ', this.productsLocalStorage);
@@ -204,12 +256,11 @@ export class AppComponent {
       const firstElementHeight = lastElement.getBoundingClientRect().height;
       const lastElementHeight = lastElement.getBoundingClientRect().height;
       const storeMinHeight =
-        innerHeight - (Math.round(firstElementHeight / 2) + lastElementHeight);
+        innerHeight - (firstElementHeight + lastElementHeight);
       console.log('resizing');
-      this.storeMinHeight = storeMinHeight;
       return storeMinHeight;
     }
-    this.storeMinHeight = innerHeight;
+    console.log('resizing2');
     return innerHeight;
   }
 

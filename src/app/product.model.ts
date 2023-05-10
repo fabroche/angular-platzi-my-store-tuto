@@ -1,8 +1,9 @@
 export interface IProduct {
   name: string;
-  price: number;
+  price: number | undefined;
   image: string;
   category?: string;
+  description?: string;
 }
 
 export enum EnumRegister {
