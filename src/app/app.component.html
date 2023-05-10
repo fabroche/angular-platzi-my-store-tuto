@@ -77,6 +77,7 @@
     <form
       id="store-form-products"
       class="store-add-form"
+      [class.loading]="formLoading"
       (ngSubmit)="onAddProduct()"
       #storeForm="ngForm"
     >
@@ -110,12 +111,10 @@
           (change)="onFileSelected($event)"
           accept="image/png, image/jpeg"
         />
-        <!-- <p class="store-item-description-text">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora
-          placeat saepe nihil, porro ea minima! Corrupti, quaerat ipsum tempore
-          impedit eligendi expedita asperiores aspernatur amet sit natus et.
-          Dicta, facilis!
-        </p> -->
+        <div *ngIf="formLoading" class="spinner-container">
+          <div class="spinner"></div>
+          <p>Loading...</p>
+        </div>
         <input
           required
           id="description"
@@ -139,7 +138,7 @@
         />
       </div>
       <button
-        [disabled]="storeForm.invalid"
+        [disabled]="storeForm.invalid && formLoading"
         [style.background-color]="storeForm.valid ? 'darkslategrey' : 'gray'"
         type="submit"
         class="store-buy-button"

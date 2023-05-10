@@ -100,6 +100,9 @@ export class AppComponent {
 
   // Product States
   // Register Form
+
+  formLoading = false;
+
   newProductRegister: IProduct = {
     name: '',
     price: 0,
@@ -110,7 +113,7 @@ export class AppComponent {
   toUploadFile: File | null = null;
   imageUrl: string | null = null;
   productName = '';
-  productPrice = 0;
+  productPrice = undefined;
   productDescription = '';
 
   // Store
@@ -190,6 +193,7 @@ export class AppComponent {
   }
 
   async onAddProduct() {
+    this.formLoading = true;
     if (this.toUploadFile) {
       console.log('newProductRegister :>> ', this.newProductRegister);
       // 1 - subir el fichero
@@ -220,6 +224,7 @@ export class AppComponent {
       description: '',
     };
     localStorage.setItem('products', JSON.stringify(this.productsLocalStorage));
+    this.formLoading = false;
     console.log('this.productsLocalStorage :>> ', this.productsLocalStorage);
   }
 
