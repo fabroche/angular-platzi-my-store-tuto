@@ -28,7 +28,11 @@
   class="store"
   [ngStyle]="{
     'justify-content':
-      productsLocalStorage.length === 0 ? 'center' : 'flex-start',
+      productsLocalStorage.length >= 0 && productsLocalStorage.length <= 4
+        ? 'center'
+        : productsLocalStorage.length > 4
+        ? 'center'
+        : 'flex-start',
     'min-height.px': storeMinHeight
   }"
   (resize)="onResizeHandle()"
