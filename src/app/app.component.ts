@@ -192,7 +192,8 @@ export class AppComponent {
     return this.showbuyNotification;
   }
 
-  async onAddProduct() {
+  async onAddProduct(event:Event) {
+    event.preventDefault()
     this.formLoading = true;
     if (this.toUploadFile) {
       console.log('newProductRegister :>> ', this.newProductRegister);

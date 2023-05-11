@@ -18,7 +18,7 @@
     *ngIf="showbuyNotification"
     class="store-buy-notification"
     [ngClass]="{
-    'active': buyAnimationStatus() === true,
+    'active': showbuyNotification,
   }"
   >
     <p>🎁 Gracias por Elegirnos</p>
@@ -82,7 +82,7 @@
       id="store-form-products"
       class="store-add-form"
       [class.loading]="formLoading"
-      (ngSubmit)="onAddProduct()"
+      (ngSubmit)="onAddProduct($event)"
       #storeForm="ngForm"
     >
       <input
