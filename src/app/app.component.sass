@@ -218,6 +218,7 @@
 
 .store-buy-notification-container
     display: flex
+    flex-direction: column
     justify-content: end
     align-items: end
     position: fixed
@@ -237,23 +238,25 @@
         opacity: 0
 
 .store-buy-notification
-    justify-content: center
-    align-items: center
-    margin: 20px
-    color: aliceblue
-    background: darkslategrey
-    font-weight: bold
-    padding: 5px
+    &::marker
 
-    width: 50px
-    height: 0
-    border-radius: 5px
-    display: flex
+        justify-content: center
+        align-items: center
+        margin: 20px
+        color: aliceblue
+        background: darkslategrey
+        font-weight: bold
+        padding: 5px
+
+        width: 50px
+        height: 0
+        border-radius: 5px
+        display: flex
     // margin-left: 5px
-    transition: all 200ms
-    opacity: 0
+        transition: all 200ms
+        opacity: 1
     &.active
-        // position: absolute
+    //     // position: absolute
         width: 200px
         height: 40px
         opacity: 1

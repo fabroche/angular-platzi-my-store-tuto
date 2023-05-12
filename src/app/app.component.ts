@@ -96,7 +96,7 @@ export class AppComponent {
   ];
 
   productsLocalStorage: IProduct[] =
-    JSON.parse(localStorage.getItem('products')!) || [];
+    JSON.parse(localStorage.getItem('productos')!) || [];
 
   // Product States
   // Register Form
@@ -154,7 +154,7 @@ export class AppComponent {
   buyProduct(index: number) {
     this.selledProductAnimation(index);
     console.log('scroll :>> ', scrollY);
-    setTimeout(() => this.buyAnimation(), 2000);
+    this.buyAnimation();
   }
 
   selledProductAnimation(index: number) {
@@ -165,35 +165,74 @@ export class AppComponent {
     setTimeout(() => {
       this.productsLocalStorage.splice(index, 1);
       localStorage.setItem(
-        'products',
+        'productos',
         JSON.stringify(this.productsLocalStorage)
       );
       this.showbuyNotification = true;
     }, 500);
   }
 
-  buyAnimation() {
-    let notification = document.querySelector('.store-buy-notification');
+  async buyAnimation() {
+    // Creando Notificacion de Compra
 
-    if (notification) {
-      notification.className.includes('inactive')
-        ? (notification.className = notification.className.replace(
-            'inactive',
-            'active'
-          ))
-        : (notification.className = notification.className.replace(
-            'active',
-            'inactive'
-          ));
-    }
-    setTimeout(() => (this.showbuyNotification = false), 800);
+    const divNotificationContainer = document.querySelector(
+      '.store-buy-notification-container'
+    )!;
+
+    const liNotification = document.createElement('li');
+
+    liNotification.classList.add('store-buy-notification');
+
+    let notificationStyles: string = [
+      'justify-content: center;',
+      'align-items: center;',
+      'margin: 20px;',
+      'color: aliceblue;',
+      'background: darkslategrey;',
+      'font-weight: bold;',
+      'padding: 5px;',
+      'width: 50px;',
+      'height: 0;',
+      'opacity: 0;',
+      'border-radius: 5px;',
+      'display: flex;',
+      'transition: all 200ms;',
+    ].join('');
+
+    let notificationStylesActive = notificationStyles.replace(
+      'width: 50px;height: 0;opacity: 0;',
+      'width: 200px;height: 40px;opacity: 1;'
+    );
+
+    liNotification.setAttribute('style', `${notificationStyles}`);
+
+    const p = document.createElement('p');
+
+    const notificationText = document.createTextNode(
+      '🎁 Gracias por Elegirnos'
+    );
+
+    p.appendChild(notificationText);
+    
+    divNotificationContainer.appendChild(liNotification);
+
+    liNotification.appendChild(p);
+
+    await setTimeout(() => {
+      liNotification.setAttribute('style', `${notificationStylesActive}`);
+    }, 400);
+    await setTimeout(() => {
+      liNotification.setAttribute('style', `${notificationStyles}`);
+      setTimeout(() => liNotification.remove(), 200);
+    }, 2000);
+
   }
   buyAnimationStatus() {
     return this.showbuyNotification;
   }
 
-  async onAddProduct(event:Event) {
-    event.preventDefault()
+  async onAddProduct(event: Event) {
+    event.preventDefault();
     this.formLoading = true;
     if (this.toUploadFile) {
       console.log('newProductRegister :>> ', this.newProductRegister);
