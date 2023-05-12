@@ -5,6 +5,7 @@ import { EnumRegister } from './product.model';
 import { IRegister } from './product.model';
 import { uploadFile, downloadFileUrl } from 'src/firebase/config';
 import { faker } from '@faker-js/faker';
+import { INotificacionStyles } from './notification.model';
 
 @Component({
   selector: 'app-root',
@@ -125,9 +126,43 @@ export class AppComponent {
   instagramIcon = '../assets/insta.png';
   twitterIcon = '../assets/twitter.png';
 
+  // Notifications States
+
+  notificationStyles: INotificacionStyles = {
+    'justify-content': 'center',
+    'align-items': 'center',
+    margin: '20px',
+    color: 'aliceblue',
+    background: 'darkslategrey',
+    'font-weight': 'bold',
+    padding: '5px',
+    width: '50px',
+    height: '0',
+    opacity: '0',
+    'border-radius': '5px',
+    display: 'flex',
+    transition: 'all 200ms',
+  };
+  notificationStylesActive: INotificacionStyles = {
+    width: '200px',
+    height: '40px',
+    opacity: '1',
+    
+  };
+
   // Services
 
   // General
+
+  ngOnInit() {
+    // Scroll to top of page after loading
+    // window.scrollTo(0, 0);
+    // localStorage.setItem('products', this.productsLocalStorage);
+    this.productsLocalStorage.push(...this.products);
+    // console.log('products :>> ', this.productsLocalStorage);
+    this.storeMinHeight = this.onResizeHandle();
+  }
+
   onScroll(event: Event) {
     if (event) {
       const element = event.target as HTMLUListElement;
@@ -135,15 +170,6 @@ export class AppComponent {
     }
     this.scrollState = scrollY;
     console.log(this.scrollState);
-  }
-
-  ngOnInit() {
-    // Scroll to top of page after loading
-    // window.scrollTo(0, 0);
-    // localStorage.setItem('products', this.productsLocalStorage);
-    this.productsLocalStorage.push(...this.products);
-    console.log('products :>> ', this.productsLocalStorage);
-    this.storeMinHeight = this.onResizeHandle();
   }
 
   // ngOnChange() {
@@ -181,27 +207,29 @@ export class AppComponent {
 
     const liNotification = document.createElement('li');
 
+    // Agregandole estilos
+
     liNotification.classList.add('store-buy-notification');
 
     let notificationStyles: string = [
-      'justify-content: center;',
-      'align-items: center;',
-      'margin: 20px;',
-      'color: aliceblue;',
-      'background: darkslategrey;',
-      'font-weight: bold;',
-      'padding: 5px;',
-      'width: 50px;',
-      'height: 0;',
-      'opacity: 0;',
-      'border-radius: 5px;',
-      'display: flex;',
-      'transition: all 200ms;',
+      `justify-content: ${this.notificationStyles['justify-content']};`,
+      `align-items: ${this.notificationStyles['align-items']};`,
+      `margin: ${this.notificationStyles['margin']};`,
+      `color: ${this.notificationStyles['color']};`,
+      `background: ${this.notificationStyles['background']};`,
+      `font-weight: ${this.notificationStyles['font-weight']};`,
+      `padding: ${this.notificationStyles['padding']};`,
+      `width: ${this.notificationStyles['width']};`,
+      `height: ${this.notificationStyles['height']};`,
+      `opacity: ${this.notificationStyles['opacity']};`,
+      `border-radius: ${this.notificationStyles['border-radius']};`,
+      `display: ${this.notificationStyles['display']};`,
+      `transition: ${this.notificationStyles['transition']};`,
     ].join('');
 
     let notificationStylesActive = notificationStyles.replace(
-      'width: 50px;height: 0;opacity: 0;',
-      'width: 200px;height: 40px;opacity: 1;'
+      `width: ${this.notificationStyles['width']};height: ${this.notificationStyles['height']};opacity: ${this.notificationStyles['opacity']};`,
+      `width: ${this.notificationStylesActive['width']};height: ${this.notificationStylesActive['height']};opacity: ${this.notificationStylesActive['opacity']};`
     );
 
     liNotification.setAttribute('style', `${notificationStyles}`);
@@ -213,20 +241,22 @@ export class AppComponent {
     );
 
     p.appendChild(notificationText);
-    
+
     divNotificationContainer.appendChild(liNotification);
 
     liNotification.appendChild(p);
 
+    // animando entrada y salida de la notificacion
     await setTimeout(() => {
       liNotification.setAttribute('style', `${notificationStylesActive}`);
     }, 400);
+
     await setTimeout(() => {
       liNotification.setAttribute('style', `${notificationStyles}`);
       setTimeout(() => liNotification.remove(), 200);
     }, 2000);
-
   }
+
   buyAnimationStatus() {
     return this.showbuyNotification;
   }
@@ -302,10 +332,10 @@ export class AppComponent {
       const lastElementHeight = lastElement.getBoundingClientRect().height;
       const storeMinHeight =
         innerHeight - (firstElementHeight + lastElementHeight);
-      console.log('resizing');
+      // console.log('resizing');
       return storeMinHeight;
     }
-    console.log('resizing2');
+    // console.log('resizing2');
     return innerHeight;
   }
 
